@@ -1294,8 +1294,8 @@ version is `MAJOR.<commit count>.<run number>`. zigkit follows that:
 
 ### 5.13 Phase 3 order and its constraints
 
-Order (PLAN's, risk ascending): **glim → fulcio-codesign →
-browser-agent-os → wasiglk → quoin → capsper → zerocast → flong**.
+Order (PLAN's, risk ascending, wasiglk deferred): **glim →
+fulcio-codesign → browser-agent-os → quoin → capsper → zerocast → flong**.
 
 1. **zigkit is tagged and green before a consumer pins it**, with every
    kind flong needs, the Darwin backend and the helpers. A change a
@@ -1320,10 +1320,13 @@ browser-agent-os → wasiglk → quoin → capsper → zerocast → flong**.
 3. **glim is the first `sys`/`fd` consumer**: small, single-threaded, about
    30 removed posix calls, and a 95,952-byte gate that proves the size claims
    on a real binary.
-4. fulcio-codesign, browser-agent-os and wasiglk take **no zigkit
-   dependency** (§9.6); they only move to 0.16. wasiglk lands its 0.16 bump
-   only with the split-EH-object setjmp workaround, else stays on 0.15.2;
-   it blocks nothing.
+4. fulcio-codesign and browser-agent-os take **no zigkit dependency**
+   (§9.6); they only move to 0.16. **wasiglk is deferred and stays on
+   0.15.2** (decided 2026-11-11): it shares no code with zigkit, blocks
+   nothing, and its 7 setjmp interpreters would need the split-EH-object
+   workaround on 0.16. It moves once, straight to 0.17, after Zig bundles
+   a wasi-libc that defines `__c_longjmp` (or with inventory §2.8's
+   workaround (b)).
 5. **quoin before flong**, so the `fd` flong finally switches to has
    already carried capacity 4, extra kinds, Darwin and `unwrap`.
 6. **flong last**: most `@bitCast`, Nix-built, and the source.
@@ -2431,7 +2434,7 @@ or `fmt` step nothing runs gates nothing, and the 0.17 group's promise
   it fixes that line when it moves to 0.17. It moves to 0.16 (setup-zig
   `version: 0.16.0`).
 - **browser-agent-os:** WASI, hand-rolled per binary on purpose.
-- **wasiglk:** WASI; blocked on setjmp (§5.13).
+- **wasiglk:** WASI; deferred, stays on 0.15.2 (§5.13).
 - **ten-vad-ggml:** none until it has a build.zig; then `translateC` for
   ggml and fftw, minish for capsper's lost properties, and the lint.
 

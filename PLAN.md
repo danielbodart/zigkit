@@ -189,7 +189,8 @@ flong history: C line references, quirk numbers and phases.
 
 ### Phase 3: Move each project (Migrate workflow, one worktree per project, pipelined)
 For each project, in order of risk: glim, fulcio-codesign,
-browser-agent-os, wasiglk, quoin, capsper, zerocast, flong. **flong last**
+browser-agent-os, quoin, capsper, zerocast, flong. (wasiglk is deferred and
+stays on 0.15.2: see DESIGN.md §5.13. ten-vad-ggml was added at kickoff.) **flong last**
 (most `@bitCast`, Nix-built, and the source of the fd code).
 1. Bump the Zig pin (`.mise.toml` / flake `zig_0_16` / setup-zig
    version) and `minimum_zig_version`. Refresh Nix fixed-output dep
